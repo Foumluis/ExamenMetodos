@@ -212,10 +212,12 @@ def comparacion_compras_generos(request):
         for k in range(1, mes+1):
             for l in range(dias):
                 # Usar cambios porcentuales históricos
-                cambio = np.random.choice([x for x in meses.loc[k, "cambio_pct"] if not np.isnan(x)])
+                cambio = np.random.choice([x for x in meses.loc[k, "cambio_pct"] if not np.isnan(x) and not np.isinf(x)])
                 nuevoValor = inflacion[-1] * (1 + cambio/100/30)  # Aplicar cambio porcentual diario
-                inflacion.append(nuevoValor)
-        print(inflacion)
+                inflacion.append(float(nuevoValor))
+        x.append(list(range(0, dias*12 +1)))
+        y.append(inflacion)
+    print(x)
     context = {
         'x': x,
         'y': y
