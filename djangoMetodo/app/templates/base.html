@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Z&Z - Dashboard de Análisis{% endblock %}</title>
+    <!-- Bootstrap CSS and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js for interactive charts -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --sidebar-width: 300px;
+            --topbar-height: 60px;
+        }
+        
+        body {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            scroll-behavior: smooth;
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: var(--topbar-height);
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 30px;
+        }
+
+        .info-icon {
+            font-size: 24px;
+            color: #1e3c72;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .info-icon:hover {
+            color: #2a5298;
+            transform: scale(1.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px 0;
+            background: linear-gradient(135deg, #5f194b 0%, #2a5298 100%);
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .nav-section {
+            margin-bottom: 10px;
+        }
+
+        .nav-section-header {
+            padding: 12px 20px;
+            margin: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-section-header::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-section-header:hover::after {
+            left: 100%;
+        }
+
+        .nav-section-header:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(3px);
+        }
+
+        .nav-section-header.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-section-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-section-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .nav-subsection {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .nav-subsection.show {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .nav-item {
+            margin: 4px 16px 4px 32px;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: white;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            padding-left: 25px;
+        }
+
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.25);
+            font-weight: 500;
+        }
+
+        .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-link-special {
+            padding: 12px 20px;
+            margin: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .nav-link-special:hover {
+            background-color: rgba(220, 53, 69, 0.3);
+            transform: translateX(5px);
+        }
+
+        .nav-link-special.active {
+            background-color: rgba(220, 53, 69, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--topbar-height);
+            padding: 30px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Page Transition Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+
+
+        /* Smooth page transitions */
+        .page-transition {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Horizontal Navbar for Problemas */
+        .horizontal-nav {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .horizontal-nav .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .horizontal-nav .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .horizontal-nav .nav-tabs .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #932647;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+        }
+
+        .horizontal-nav .nav-tabs .nav-link:hover {
+            color: #1e3c72;
+            background-color: rgba(30, 60, 114, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .horizontal-nav .nav-tabs .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .horizontal-nav .nav-tabs .nav-link.active {
+            color: #1e3c72;
+            background-color: rgba(30, 60, 114, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .horizontal-nav .nav-tabs .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            margin-bottom: 20px;
+            animation: cardSlideIn 0.5s ease-out backwards;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        li {
+        margin-bottom: 20px;
+        }
+        /* Stagger card animations */
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .top-bar {
+                left: 0;
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <a href="{% url 'alcance' %}" title="Alcance del Proyecto">
+                <i class="bi bi-info-circle info-icon"></i>
+            </a>
+        </div>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3 class="text-white mb-0">
+                    <i class="bi bi-calculator"></i>
+                    Examen
+                </h3>
+                <p class="text-white-50 small mb-0">Metodos numericos</p>
+            </div>
+
+            <!-- Home Link -->
+            <div class="nav-section">
+                <a class="nav-link-special text-white {% if request.path == '/' %}active{% endif %}" 
+                   href="{% url 'home' %}"
+                   style="background-color: rgba(40, 167, 69, 0.2); border: 1px solid rgba(40, 167, 69, 0.3);">
+                    <i class="bi bi-house-door-fill"></i>
+                    <span>Inicio</span>
+                </a>
+            </div>
+
+            <!-- Análisis Univariado -->
+            <div class="nav-section">
+                <div class="nav-section-header" onclick="toggleSection('univariado')">
+                    <div class="nav-section-title">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Regresion Lineal</span>
+                    </div>
+                    <i class="bi bi-chevron-down text-white nav-section-icon" id="icon-univariado"></i>
+                </div>
+                <div class="nav-subsection" id="subsection-univariado">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white {% if 'distribucion-genero' in request.path %}active{% endif %}" 
+                               href="{% url 'distribucion_genero' %}">
+                                <i class="bi bi-briefcase"></i>
+                                Desempleo
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Análisis Bivariado -->
+            <div class="nav-section">
+                <div class="nav-section-header" onclick="toggleSection('bivariado')">
+                    <div class="nav-section-title">
+                        <i class="bi bi-diagram-3-fill"></i>
+                        <span>Montecarlo</span>
+                    </div>
+                    <i class="bi bi-chevron-down text-white nav-section-icon" id="icon-bivariado"></i>
+                </div>
+                <div class="nav-subsection" id="subsection-bivariado">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-white {% if 'comparacion-generos' in request.path %}active{% endif %}" 
+                               href="{% url 'comparacion_generos' %}">
+                                <i class="bi bi-people"></i>
+                                Inflacion
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white {% if 'categoria-monto' in request.path %}active{% endif %}" 
+                               href="{% url 'categoria_monto' %}">
+                                <i class="bi bi-tags"></i>
+                                Desempleo
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+           
+
+
+            <!-- Problemas (Special Section) -->
+            <div class="nav-section mt-3">
+                <a class="nav-link-special text-white {% if 'problemas' in request.path %}active{% endif %}" 
+                   href="{% url 'problemas' %}">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Problemas</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        function toggleSection(sectionId) {
+            const subsection = document.getElementById('subsection-' + sectionId);
+            const icon = document.getElementById('icon-' + sectionId);
+            
+            if (subsection.classList.contains('show')) {
+                subsection.classList.remove('show');
+                icon.classList.remove('rotated');
+            } else {
+                subsection.classList.add('show');
+                icon.classList.add('rotated');
+            }
+        }
+
+        // Auto-expand active sections on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const activeSections = document.querySelectorAll('.nav-subsection');
+            activeSections.forEach(subsection => {
+                const activeLink = subsection.querySelector('.nav-link.active');
+                if (activeLink) {
+                    const sectionId = subsection.id.replace('subsection-', '');
+                    subsection.classList.add('show');
+                    document.getElementById('icon-' + sectionId).classList.add('rotated');
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}Alcance del Proyecto{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-info-circle me-2"></i>Alcance del Proyecto</h2>
+            <p class="text-muted">Información general sobre el proyecto de análisis de ventas</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Objetivo del Proyecto</h5>
+                </div>
+                <div class="card-body">
+                    <p>Z&Z, una empresa de retail de moda que se acaba de instalar en Estados Unidos, nos contactó para realizar un análisis exhaustivo de sus datos de ventas del año 2024. La empresa busca identificar oportunidades de mejora y optimización en sus procesos comerciales para alcanzar sus metas estratégicas de expansión y rentabilidad.</p>
+                    
+                    <p class="mb-2"><strong>Objetivos específicos del análisis:</strong></p>
+                    <ul class="mb-3">
+                        <li>Identificar patrones de comportamiento de compra por segmento de clientes</li>
+                        <li>Analizar la distribución geográfica de ventas y detectar oportunidades de expansión</li>
+                        <li>Evaluar el rendimiento de las diferentes categorías de productos</li>
+                        <li>Proporcionar insights accionables basados en datos para la toma de decisiones estratégicas</li>
+                    </ul>
+                    
+                    <p class="mb-0"><strong>Meta empresarial:</strong> Consolidar la presencia de Z&Z en todo el territorio estadounidense, alcanzando una base diversa de clientes y optimizando su mix de productos para maximizar la rentabilidad en cada región.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Detalle de los datos</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Fecha de inicio:</strong> Enero 2024</li>
+                        <li><strong>Fecha de fin:</strong> Diciembre 2024</li>
+                        <li><strong>Duración:</strong> 12 meses</li>
+                        <li><strong>Cantidad de datos:</strong> 3,900 transacciones exactas</li>
+                        <li><strong>Cobertura geográfica:</strong> 50 estados de Estados Unidos</li>
+                        <li><strong>Número de variables:</strong> 18 columnas de datos</li>
+                        <li><strong>Frecuencia de actualización:</strong> Mensual</li>
+                        <li><strong>Formato de los datos:</strong> Variado entre numérico y categórico</li>
+                        <li><strong>Variables clave:</strong> Fecha de venta, monto de compra, ubicación geográfica, categoría de producto, género del cliente</li>
+                        <li><strong>Integridad de datos:</strong> 100% sin valores nulos o faltantes</li>
+                        <li><strong>Fuentes de datos:</strong> Base de datos interna de Z&Z</li>
+                        <li><strong>Calidad de los datos:</strong> Limpios y validados</li>
+                        <li><strong>Limitaciones:</strong> Falta de variables de costo y stock, falta de especificacion en el tiempo, poca claridad en prioridades de la tienda</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tipos de Análisis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center p-3">
+                                <i class="bi bi-bar-chart-fill text-primary" style="font-size: 3rem;"></i>
+                                <h6 class="mt-2">Análisis Univariado</h6>
+                                <p class="small text-muted">Distribución individual de variables clave</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3">
+                                <i class="bi bi-diagram-3-fill text-success" style="font-size: 3rem;"></i>
+                                <h6 class="mt-2">Análisis Bivariado</h6>
+                                <p class="small text-muted">Relaciones entre pares de variables</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3">
+                                <i class="bi bi-geo-alt-fill text-info" style="font-size: 3rem;"></i>
+                                <h6 class="mt-2">Análisis de Ubicación</h6>
+                                <p class="small text-muted">Patrones geográficos de ventas</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center p-3">
+                                <i class="bi bi-grid-3x3-gap-fill text-warning" style="font-size: 3rem;"></i>
+                                <h6 class="mt-2">Análisis Multivariado</h6>
+                                <p class="small text-muted">Interacciones complejas entre variables</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Metodología</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li><strong>Recopilación de datos:</strong> Obtencion de base de datos de Z&Z</li>
+                        <li><strong>Limpieza y preparación:</strong> Normalización y validación</li>
+                        <li><strong>Análisis exploratorio:</strong> Identificación de patrones</li>
+                        <li><strong>Visualización:</strong> Creación de gráficos y dashboards</li>
+                        <li><strong>Interpretación:</strong> Generación de insights accionables</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Problemas Identificados</h5>
+                </div>
+                <div class="card-body">
+                    <p>Durante el análisis se identificaron tres problemas principales que requieren atención:</p>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="alert alert-danger">
+                                <h6><i class="bi bi-1-circle me-2"></i>Disparidad en Ventas por Género</h6>
+                                <p class="small mb-0">Diferencias significativas en los patrones de compra entre géneros.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-warning">
+                                <h6><i class="bi bi-2-circle me-2"></i>Ventas Precarias en Categorías</h6>
+                                <p class="small mb-0">Algunas categorías con rendimiento muy por debajo del promedio.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-info">
+                                <h6><i class="bi bi-3-circle me-2"></i>Presencia Geográfica Pobre</h6>
+                                <p class="small mb-0">Cobertura limitada en el territorio estadounidense.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Herramientas Utilizadas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-2">
+                            <i class="bi bi-file-earmark-code text-primary" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Python</p>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="bi bi-table text-success" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Pandas</p>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="bi bi-graph-up text-warning" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Chart.js</p>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="bi bi-diagram-3 text-info" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Plotly</p>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="bi bi-code-square text-danger" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Django</p>
+                        </div>
+                        <div class="col-md-2">
+                            <i class="bi bi-bootstrap text-purple" style="font-size: 2rem;"></i>
+                            <p class="small mt-2">Bootstrap</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5>¿Necesitas más información?</h5>
+                    <p class="text-muted">Para consultas adicionales sobre este proyecto, contacta al equipo de análisis.</p>
+                    <a href="{% url 'problemas' %}" class="btn btn-primary me-2">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Ver Problemas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

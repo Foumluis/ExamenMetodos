@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bienvenido - Z&Z Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-image: url("{% static 'fondoHome.png' %}");
+        background-size: cover;      
+        background-repeat: no-repeat; 
+        background-attachment: fixed; 
+        background-position: center;  
+    }
+
+    /* Enhanced card animations for home page */
+    .home-card {
+        animation: slideInFromBottom 0.8s ease-out backwards;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .home-card:nth-child(1) { animation-delay: 0.2s; }
+    .home-card:nth-child(2) { animation-delay: 0.4s; }
+
+    @keyframes slideInFromBottom {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .header-card {
+        animation: fadeInScale 0.6s ease-out;
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .card-body p {
+        transition: color 0.3s ease;
+    }
+
+    .card:hover .card-body p {
+        color: #1e3c72;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card header-card">
+                <div class="card-body text-center py-5">
+                    <h1 class="display-4 mb-3">
+                        <i class="bi bi-people me-3"></i>
+                        Hola a todos Bienvenidos a la presentación de Luis-Felipe Cáceres
+                    </h1>
+                    <p class="lead text-muted">Analisis de datos economicos y colegiales</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Cards -->
+    <div class="row">
+        <div class="col-md-6 mb-4 home-card">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calculator me-2"></i>
+                        Cuales fueron las tematicas a tomar?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>Relacion del cambio de sueldo con respecto a la inflación, desempleo, deuda total y costo de empleo.</p>
+                    
+                    <p>Predicción con montecarlo sobre la inflacion y desempleo en un año.</p>
+
+                    <p>Analisis de la asistencia al colegio dependiendo del clima.</p>
+
+                    <p>Todo esto basado unicamente en Chile.</p>
+
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4 home-card">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up-arrow me-2"></i>
+                        ¿Por qué estas tematicas?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>Estas tematicas fueron decididas por mi debido a solo curiosidad.</p>
+                    
+                    <p>Por la parte economica, queria ver como se relacionaba la variable de cambio de sueldo con las demaas variables, para ver si exisitia una dependencia entre ellas.</p>
+                    
+                    <p>Con montecarlo queria poder predecir con datos economicos de importancia aca en chile un margen de aca a un año, para ver como van a cambiar las cosas, y ver de aca a un año si se respeta ese margen.</p>
+
+                    <p>El tema de edcucacion me llamaba la atencion poder relacionar la temperatura con el tema de asistencia escolar, por cual quise investigar de que manera se podian relacionar.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

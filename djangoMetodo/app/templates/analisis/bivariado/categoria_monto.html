@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Relación entre Categoría de Artículo y Monto de Compra{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-tags me-2"></i>Relación entre Categoría de Artículo y Monto de Compra</h2>
+            <p class="text-muted">Análisis de cómo las diferentes categorías se relacionan con los montos de compra</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Distribución por Categoría</h5>
+                </div>
+                <div class="card-body">
+                    <div id="categoriaMontoChart" style="width: 100%; height: 594px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Análisis Detallado</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Monto Total</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:rgba(135, 170, 210, 0.9);margin-right:8px;border:1px solid #ddd;"></span>
+                                Accesorios
+                                </td>
+                                <td><span id ="valor0">-</span></td>
+                                <td><span id ="porcentaje0">-</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:rgba(230, 140, 140, 0.9);margin-right:8px;border:1px solid #ddd;"></span>
+                                Calzado
+                                </td>
+                                <td><span id ="valor1">-</span></td>
+                                <td><span id ="porcentaje1">-</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:rgba(240, 190, 130, 0.9);margin-right:8px;border:1px solid #ddd;"></span>
+                                Outerwear
+                                </td>
+                                <td><span id ="valor2">-</span></td>
+                                <td><span id ="porcentaje2">-</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:rgba(140, 220, 140, 0.9);margin-right:8px;border:1px solid #ddd;"></span>
+                                Ropa
+                                </td>
+                                <td><span id ="valor3">-</span></td>
+                                <td><span id ="porcentaje3">-</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                        <div class="mt-3">
+                        <strong>Monto Total General: <span id="total">-</span></strong>
+                        </div>
+
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Conclusiones</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>La categoría Ropa representa la mayor parte de las ventas, lo que indica una fuerte preferencia del público por este tipo de productos.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Accesorios también tiene un peso significativo, mostrando una buena oportunidad para potenciar ventas cruzadas con otras categorías.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Calzado mantiene una participación moderada, pero con margen para aumentar su contribución.</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>La categoría Outerwear presenta el monto total más bajo de todas <span id ="porcentajeOuterWear">-</span>, reflejando una demanda mínima por parte de los clientes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data passed from Django using json_script -->
+{{ categories|json_script:"categories-data" }}
+{{ values|json_script:"values-data" }}
+{{ percentages|json_script:"percentages-data" }}
+{{ total|json_script:"total-data" }}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const categories = JSON.parse(document.getElementById('categories-data').textContent);
+    const values = JSON.parse(document.getElementById('values-data').textContent);
+    const percentages = JSON.parse(document.getElementById('percentages-data').textContent);
+    const total = JSON.parse(document.getElementById('total-data').textContent);
+    
+    const colors = {
+        'Accesorios': 'rgba(135, 170, 210, 0.9)',
+        'Calzado': 'rgba(230, 140, 140, 0.9)',
+        'Outerwear': 'rgba(240, 190, 130, 0.9)',
+        'Ropa': 'rgba(140, 220, 140, 0.9)'
+    };
+    
+    const categoryColors = categories.map(cat => colors[cat] || 'rgba(150, 150, 150, 0.9)');
+    
+
+    function formatNumber(num) {
+        return num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+    document.getElementById('valor0').innerText = formatNumber(values[0]);
+    document.getElementById('valor1').innerText = formatNumber(values[1]);
+    document.getElementById('valor2').innerText = formatNumber(values[2]);
+    document.getElementById('valor3').innerText = formatNumber(values[3]);
+
+    document.getElementById('porcentaje0').innerText = percentages[0].toFixed(2) + '%';
+    document.getElementById('porcentaje1').innerText = percentages[1].toFixed(2) + '%';
+    document.getElementById('porcentaje2').innerText = percentages[2].toFixed(2) + '%';
+    document.getElementById('porcentaje3').innerText = percentages[3].toFixed(2) + '%';
+
+    document.getElementById('total').innerText = formatNumber(total);
+
+    document.getElementById('porcentajeOuterWear').innerText = percentages[2].toFixed(2) + '%';
+    const data = [{
+        values: values,
+        labels: categories,
+        type: 'pie',
+        textinfo: 'label+percent',
+        textposition: 'inside',
+        automargin: true,
+        marker: {
+            colors: categoryColors,
+            line: {
+                color: 'white',
+                width: 2
+            }
+        },
+        hovertemplate: '<b>%{label}</b><br>' +
+                       'Monto Total: $%{value:,.2f}<br>' +
+                       'Porcentaje: %{percent}<br>' +
+                       '<extra></extra>',
+        textfont: {
+            size: 16,
+            family: 'Inter, system-ui, -apple-system, sans-serif',
+            color: 'white'
+        },
+        pull: [0.02, 0.02, 0.02, 0.02]  
+    }];
+
+    const layout = {
+        title: {
+            text: 'Monto Total por Categoría',
+            font: {
+                size: 18,
+                family: 'Inter, system-ui, -apple-system, sans-serif',
+                color: '#333'
+            },
+            x: 0.5,
+            xanchor: 'center'
+        },
+        showlegend: true,
+        legend: {
+            orientation: 'h',
+            x: 0.5,
+            xanchor: 'center',
+            y: -0.1,
+            yanchor: 'top',
+            font: {
+                size: 12,
+                family: 'Inter, system-ui, -apple-system, sans-serif'
+            },
+            bgcolor: 'rgba(255, 255, 255, 0.9)',
+            bordercolor: '#E0E0E0',
+            borderwidth: 1
+        },
+        margin: {
+            l: 20,
+            r: 20,
+            t: 60,
+            b: 80
+        },
+        paper_bgcolor: 'white',
+        plot_bgcolor: 'white',
+        height: 500
+    };
+    
+
+    const config = {
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'zoomIn2d', 'zoomOut2d']
+    };
+    
+
+    Plotly.newPlot('categoriaMontoChart', data, layout, config);
+
+</script>
+{% endblock %}

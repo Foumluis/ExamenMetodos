@@ -1,0 +1,1 @@
+print(settings.BASE_DIR)

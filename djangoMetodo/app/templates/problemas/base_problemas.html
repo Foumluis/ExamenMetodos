@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Problemas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-exclamation-triangle-fill me-2"></i>Problemas Identificados</h2>
+            <p class="text-muted">Análisis de los principales problemas detectados en el negocio</p>
+        </div>
+    </div>
+
+    <!-- Horizontal Navigation -->
+    <div class="horizontal-nav">
+        <ul class="nav nav-tabs" id="problemasTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="{% url 'problema1' %}">
+                    <i class="bi bi-1-circle me-2"></i>Problema 1: Disparidad en Ventas por Género
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema2' %}">
+                    <i class="bi bi-2-circle me-2"></i>Problema 2: Ventas Precarias en Categorías
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema3' %}">
+                    <i class="bi bi-3-circle me-2"></i>Problema 3: Presencia Geográfica Pobre en EEUU
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Distribución de Clientes por Género{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-gender-ambiguous me-2"></i>Distribución de Clientes por Género</h2>
+            <p class="text-muted">Análisis univariado de la distribución de clientes según su género</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Distribución de genero </h5>
+        </div>
+        <div class="card-body" >
+            <canvas id="genderChart" style="width:100%; height:500px;"></canvas>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Interpretación</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check-circle text-success me-2"></i>La distribución entre mujeres y hombres dentro de la empresa Z&Z muestra una marcada desigualdad, evidenciando una falta de equidad de género. Esto sugiere que las estrategias actuales no están siendo efectivas para atraer a ambos públicos de forma equilibrada, lo que podría afectar tanto la imagen de la marca como su desempeño comercial.</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Es importante que Z&Z identifique las causas de esta disparidad y adopte medidas para mejorar la inclusión. Acciones como ajustar las campañas publicitarias, diversificar la oferta de productos y reforzar su compromiso con la igualdad de oportunidades podrían contribuir a alcanzar una mayor equidad en su clientela.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Estadísticas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Total de Clientes</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:#516377;margin-right:8px;border:1px solid #ddd;"></span>
+                                Valor r2
+                                </td>
+                                <td>{{ r2 }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:#160d14;margin-right:8px;border:1px solid #ddd;"></span>
+                                Valor mae
+                                </td>
+                                <td>{{ mae }}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:#6b5e67;margin-right:8px;border:1px solid #ddd;"></span>
+                                Valor rmse
+                                </td>
+                                <td>{{ rmse }}</td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                <span style="display:inline-block;width:15px;height:15px;background:#6b5e67;margin-right:8px;border:1px solid #ddd;"></span>
+                                Variables Seleccionadas
+                                </td>
+                                <td>{{ selected_vars }}</td>
+                            </tr>                            
+                            </tbody>
+                        </table>
+                    </div>
+                        <div class="mt-3">
+                        <strong>Total de clientes: <span id="total">-</span></strong>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+{{ x|json_script:"x" }}
+{{ y|json_script:"y" }}
+
+<script>
+    const x = JSON.parse(document.getElementById('x').textContent);
+    const y = JSON.parse(document.getElementById('y').textContent);
+    let delayed;
+    const ctx = document.getElementById('genderChart').getContext('2d');
+
+    const miGrafico = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            labels: x,
+            datasets: [{
+            label: 'Total Clientes',
+            data: y,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            animation: {
+                onComplete: () => {
+                    delayed = true;
+                },
+                delay: (context) => {
+                    let delay = 0;
+                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                    delay = context.dataIndex * 10 + context.datasetIndex * 10;
+                    }
+                    return delay;
+                },
+            },
+            responsive: true,
+            plugins: {
+            legend: { display: false }
+            },
+            scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Cantidad de clientes' }
+            },
+            x: {
+                title: { display: true, text: 'Sexo' }
+            }
+            }
+        }
+        });
+</script>
+{% endblock %}

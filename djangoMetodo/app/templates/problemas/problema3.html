@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% block title %}Problema 3: Presencia Geográfica Pobre en EEUU{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Horizontal Navigation -->
+    <div class="horizontal-nav">
+        <ul class="nav nav-tabs" id="problemasTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema1' %}">
+                    <i class="bi bi-1-circle me-2"></i>Problema 1: Disparidad en Ventas por Género
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema2' %}">
+                    <i class="bi bi-2-circle me-2"></i>Problema 2: Ventas Precarias en Categorías
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="{% url 'problema3' %}">
+                    <i class="bi bi-3-circle me-2"></i>Problema 3: Presencia Geográfica Pobre en EEUU
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-3-circle-fill text-info me-2"></i>Problema 3: Presencia Geográfica Limitada en EEUU</h2>
+            <p class="text-muted">Análisis de cobertura geográfica desigual y oportunidades de expansión</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-info me-2"></i>Descripción del Problema</h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Se ha identificado una <strong>distribución geográfica desigual</strong> de las ventas en el territorio estadounidense. Algunos estados concentran la mayoría de las transacciones mientras que otros presentan una <strong>presencia casi nula</strong>, lo que limita el potencial de crecimiento nacional.</p>
+                    
+                    <div class="alert alert-info mt-3" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Hallazgo crítico:</strong> La concentración de ventas en pocos estados crea una vulnerabilidad ante cambios económicos regionales y representa una pérdida significativa de oportunidades en mercados desatendidos.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-map me-2"></i>Distribución de Ventas por Monto Total</h5>
+                </div>
+                <div class="card-body">
+                    <div id="montoMap" style="height: 450px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Presencia Geográfica por Cantidad de Ventas</h5>
+                </div>
+                <div class="card-body">
+                    <div id="cantidadMap" style="height: 450px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-table me-2"></i>Estados con Menor Presencia</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Estado</th>
+                                    <th>Cantidad de Ventas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bottom10Table">
+                                <tr><td colspan="3" class="text-center">Cargando...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i>Impacto del Problema</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2"><strong>Concentración Geográfica:</strong> Alta dependencia de pocos estados para generar ingresos</li>
+                        <li class="mb-2"><strong>Mercado Desaprovechado:</strong> Múltiples estados con potencial de ventas sin explotar</li>
+                        <li class="mb-2"><strong>Riesgo Regional:</strong> Vulnerabilidad ante cambios económicos en estados clave</li>
+                        <li class="mb-2"><strong>Competencia Desigual:</strong> Competidores con mejor cobertura nacional tienen ventaja</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb-fill me-2"></i>Causas Identificadas</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2">Falta de estrategia de expansión geográfica definida</li>
+                        <li class="mb-2">Logística y distribución concentrada en ciertas regiones</li>
+                        <li class="mb-2">Marketing enfocado en mercados ya establecidos</li>
+                        <li class="mb-2">Costos de envío elevados a estados remotos</li>
+                        <li class="mb-2">Ausencia de partnerships locales en nuevos mercados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up-arrow me-2"></i>Estrategias de Expansión</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="mb-0">
+                        <li class="mb-2">Identificar estados prioritarios basados en potencial demográfico</li>
+                        <li class="mb-2">Establecer centros de distribución regionales</li>
+                        <li class="mb-2">Implementar campañas de marketing geo-segmentadas</li>
+                        <li class="mb-2">Desarrollar alianzas con distribuidores locales</li>
+                        <li class="mb-2">Ofrecer promociones de lanzamiento en nuevos mercados</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-bullseye me-2"></i>Objetivos de Cobertura</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Metas a 12 meses:</strong></p>
+                    <ul class="mb-0">
+                        <li class="mb-2">Establecer presencia en 10 estados adicionales</li>
+                        <li class="mb-2">Incrementar ventas en estados de baja presencia en 150%</li>
+                        <li class="mb-2">Reducir concentración de top 5 estados a máximo 40%</li>
+                        <li class="mb-2">Lograr cobertura en al menos 40 de los 50 estados</li>
+                        <li class="mb-2">Diversificar fuentes de ingresos geográficamente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ estados|json_script:"estados-data" }}
+{{ codigos|json_script:"codigos-data" }}
+{{ montos|json_script:"montos-data" }}
+{{ cantidades|json_script:"cantidades-data" }}
+{{ bottom_10|json_script:"bottom10-data" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    const estados = JSON.parse(document.getElementById('estados-data').textContent);
+    const codigos = JSON.parse(document.getElementById('codigos-data').textContent);
+    const montos = JSON.parse(document.getElementById('montos-data').textContent);
+    const cantidades = JSON.parse(document.getElementById('cantidades-data').textContent);
+    const bottom10 = JSON.parse(document.getElementById('bottom10-data').textContent);
+
+
+    Plotly.newPlot('montoMap', [{
+        type: 'choropleth',
+        locationmode: 'USA-states',
+        locations: codigos,
+        z: montos,
+        text: estados,
+        colorscale: [
+            [0, 'rgb(255, 247, 236)'],
+            [0.2, 'rgb(254, 232, 200)'],
+            [0.4, 'rgb(253, 187, 132)'],
+            [0.6, 'rgb(252, 141, 89)'],
+            [0.8, 'rgb(227, 74, 51)'],
+            [1, 'rgb(179, 0, 0)']
+        ],
+        colorbar: {
+            title: 'Monto Total (USD)',
+            thickness: 15,
+            len: 0.7
+        },
+        marker: {
+            line: {
+                color: 'white',
+                width: 2
+            }
+        },
+        hovertemplate: '<b>%{text}</b><br>Monto Total: $%{z:,.0f}<extra></extra>'
+    }], {
+        title: {
+            text: 'Ventas por Estado (Monto Total en USD)',
+            font: { size: 14 }
+        },
+        geo: {
+            scope: 'usa',
+            showlakes: true,
+            lakecolor: 'rgb(255,255,255)'
+        },
+        margin: { t: 40, b: 0, l: 0, r: 0 }
+    }, {responsive: true});
+
+    Plotly.newPlot('cantidadMap', [{
+        type: 'choropleth',
+        locationmode: 'USA-states',
+        locations: codigos,
+        z: cantidades,
+        text: estados,
+        colorscale: [
+            [0, 'rgb(255, 100, 100)'],
+            [0.2, 'rgb(255, 150, 100)'],
+            [0.4, 'rgb(255, 200, 100)'],
+            [0.6, 'rgb(255, 255, 150)'],
+            [0.8, 'rgb(150, 255, 150)'],
+            [1, 'rgb(50, 200, 50)']
+        ],
+        colorbar: {
+            title: 'Cantidad de Ventas',
+            thickness: 15,
+            len: 0.7
+        },
+        marker: {
+            line: {
+                color: 'white',
+                width: 2
+            }
+        },
+        hovertemplate: '<b>%{text}</b><br>Cantidad: %{z:,}<extra></extra>'
+    }], {
+        title: {
+            text: 'Presencia por Estado (Cantidad de Ventas)',
+            font: { size: 14 }
+        },
+        geo: {
+            scope: 'usa',
+            showlakes: true,
+            lakecolor: 'rgb(255,255,255)'
+        },
+        margin: { t: 40, b: 0, l: 0, r: 0 }
+    }, {responsive: true});
+
+
+    const tableBody = document.getElementById('bottom10Table');
+    tableBody.innerHTML = '';
+    
+    for (let i = 0; i < bottom10.length; i++) {
+        const row = document.createElement('tr');
+        
+        const cellNum = document.createElement('td');
+        cellNum.textContent = i + 1;
+        
+        const cellEstado = document.createElement('td');
+        cellEstado.innerHTML = '<strong>' + bottom10[i].estado + '</strong>';
+        
+        const cellCantidad = document.createElement('td');
+        cellCantidad.textContent = bottom10[i].cantidad.toLocaleString();
+        
+        row.appendChild(cellNum);
+        row.appendChild(cellEstado);
+        row.appendChild(cellCantidad);
+        tableBody.appendChild(row);
+    }
+</script>
+{% endblock %}

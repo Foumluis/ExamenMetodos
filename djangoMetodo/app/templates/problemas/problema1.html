@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+{% block title %}Problema 1: Disparidad en Ventas por Género{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Horizontal Navigation -->
+    <div class="horizontal-nav">
+        <ul class="nav nav-tabs" id="problemasTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="{% url 'problema1' %}">
+                    <i class="bi bi-1-circle me-2"></i>Problema 1: Disparidad en Ventas por Género
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema2' %}">
+                    <i class="bi bi-2-circle me-2"></i>Problema 2: Ventas Precarias en Categorías
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema3' %}">
+                    <i class="bi bi-3-circle me-2"></i>Problema 3: Presencia Geográfica Pobre en EEUU
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-1-circle-fill text-danger me-2"></i>Problema 1: Disparidad en Ventas por Género</h2>
+            <p class="text-muted">Análisis detallado de las diferencias significativas en ventas entre géneros</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Descripción del Problema</h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Se ha identificado una <strong>baja representación del segmento femenino</strong> en la base de clientes. Con solo 1,248 mujeres frente a 2,652 hombres, existe una <strong>disparidad de género en la captación de clientes</strong> que limita el potencial de crecimiento del mercado.</p>
+                    
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Hallazgo crítico:</strong> La empresa no está alcanzando adecuadamente al público femenino, lo que representa una pérdida significativa de oportunidades de mercado en un segmento que constituye aproximadamente el 50% de la población potencial.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2"></i>Distribución de Clientes por Género</h5>
+                </div>
+                <div class="card-body">
+                    <div id="genderDistributionChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2"></i>Comparación de Montos de Compra</h5>
+                </div>
+                <div class="card-body">
+                    <div id="genderComparisonChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>Análisis Estadístico</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Métrica</th>
+                                    <th class="text-center" style="color: rgba(54, 162, 235, 0.7);">Hombre</th>
+                                    <th class="text-center" style="color: pink;">Mujer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Cantidad de Clientes</strong></td>
+                                    <td class="text-center" id="male-count">-</td>
+                                    <td class="text-center" id="female-count">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Promedio de Compra</strong></td>
+                                    <td class="text-center" id="male-mean">-</td>
+                                    <td class="text-center" id="female-mean">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mediana de Compra</strong></td>
+                                    <td class="text-center" id="male-median">-</td>
+                                    <td class="text-center" id="female-median">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Desviación Estándar</strong></td>
+                                    <td class="text-center" id="male-std">-</td>
+                                    <td class="text-center" id="female-std">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="bi bi-lightbulb-fill me-2"></i>
+                        <strong>Observación:</strong> A pesar de la baja representación femenina, ambos géneros presentan 
+                        patrones de gasto similares, con promedios cercanos a $60 USD, lo que indica que el potencial 
+                        de mercado femenino está siendo desaprovechado.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Impacto</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Pérdida de ingresos potenciales</li>
+                        <li>Desequilibrio en el inventario</li>
+                        <li>Oportunidades de mercado desaprovechadas</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Soluciones Propuestas</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Segmentación de marketing por género</li>
+                        <li>Desarrollo de productos específicos</li>
+                        <li>Campañas dirigidas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+{{ gender_labels|json_script:"gender-labels" }}
+{{ gender_counts|json_script:"gender-counts" }}
+{{ male_purchases|json_script:"male-data" }}
+{{ female_purchases|json_script:"female-data" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    const genderLabels = JSON.parse(document.getElementById('gender-labels').textContent);
+    const genderCounts = JSON.parse(document.getElementById('gender-counts').textContent);
+    const malePurchases = JSON.parse(document.getElementById('male-data').textContent);
+    const femalePurchases = JSON.parse(document.getElementById('female-data').textContent);
+
+
+    function calculateMean(arr) {
+        return (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2);
+    }
+    
+    function calculateMedian(arr) {
+        const sorted = [...arr].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 !== 0 ? sorted[mid].toFixed(2) : ((sorted[mid - 1] + sorted[mid]) / 2).toFixed(2);
+    }
+    
+    function calculateStd(arr) {
+        const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+        const variance = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / arr.length;
+        return Math.sqrt(variance).toFixed(2);
+    }
+
+
+    Plotly.newPlot('genderDistributionChart', [{
+        values: genderCounts,
+        labels: genderLabels,
+        type: 'pie',
+        marker: { colors: ['rgba(54, 162, 235, 0.7)', 'pink'] },
+        textinfo: 'label+percent+value'
+    }], {
+        title: { text: 'Distribución de Clientes', font: { size: 16 } },
+        height: 400,
+        margin: { t: 50, b: 20, l: 20, r: 20 }
+    }, {responsive: true});
+
+
+    Plotly.newPlot('genderComparisonChart', [
+        {
+            y: malePurchases,
+            name: 'Hombre',
+            type: 'box',
+            marker: { color: 'rgba(54, 162, 235, 0.7)' },
+            boxmean: 'sd'
+        },
+        {
+            y: femalePurchases,
+            name: 'Mujer',
+            type: 'box',
+            marker: { color: 'pink' },
+            boxmean: 'sd'
+        }
+    ], {
+        title: { text: 'Distribución de Montos de Compra por Género', font: { size: 16 } },
+        yaxis: { title: 'Monto de Compra (USD)', gridcolor: '#e0e0e0' },
+        showlegend: false,
+        height: 400,
+        margin: { t: 50, b: 60, l: 60, r: 20 },
+        plot_bgcolor: '#f8f9fa'
+    }, {responsive: true});
+
+
+    document.getElementById('male-count').innerText = malePurchases.length.toLocaleString();
+    document.getElementById('female-count').innerText = femalePurchases.length.toLocaleString();
+    
+    document.getElementById('male-mean').innerText = '$' + calculateMean(malePurchases);
+    document.getElementById('female-mean').innerText = '$' + calculateMean(femalePurchases);
+    
+    document.getElementById('male-median').innerText = '$' + calculateMedian(malePurchases);
+    document.getElementById('female-median').innerText = '$' + calculateMedian(femalePurchases);
+    
+    document.getElementById('male-std').innerText = '$' + calculateStd(malePurchases);
+    document.getElementById('female-std').innerText = '$' + calculateStd(femalePurchases);
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Comparación de las Compras entre Géneros{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-people me-2"></i>Comparación de las Compras entre Géneros</h2>
+            <p class="text-muted">Análisis comparativo de los patrones de compra entre diferentes géneros</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Gráfico Comparativo</h5>
+                </div>
+                <div class="card-body">
+                    <div id="comparisonChart" style="width: 100%; height: 700px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Métricas Clave</h5>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-container">
+                        <div class="metric-item mb-3">
+                            <h6 class="text-primary">Hombres</h6>
+                        </div>
+                        <hr>
+                        <div class="metric-item">
+                            <h6 class="text-danger">Mujeres</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Conclusiones</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Los promedios y medianas son casi iguales entre hombres y mujeres, lo que indica que ambos géneros gastan montos similares por compra.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>La distribución de valores es muy parecida, aunque los hombres presentan una ligera mayor dispersión, reflejando compras más variables.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Aunque los montos promedio de compra son similares entre géneros, el volumen total de ventas es mayor en hombres, lo que indica que son el principal segmento de clientes de Z&Z.</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Se recomienda que la empresa centre sus esfuerzos de marketing en fidelizar al público masculino y, al mismo tiempo, diseñe estrategias específicas para aumentar la participación femenina en las compras.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data passed from Django using json_script -->
+{{ x|json_script:"x" }}
+{{ y|json_script:"y" }}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const malePurchases = JSON.parse(document.getElementById('x').textContent);
+    const femalePurchases = JSON.parse(document.getElementById('y').textContent);
+    
+    
+     let delayed;
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+
+    const miGrafico = new Chart(ctx, {
+        type: 'plot',
+        data: {
+            labels: x,
+            datasets: [{
+            label: 'Total Clientes',
+            data: y,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            animation: {
+                onComplete: () => {
+                    delayed = true;
+                },
+                delay: (context) => {
+                    let delay = 0;
+                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                    delay = context.dataIndex * 10 + context.datasetIndex * 10;
+                    }
+                    return delay;
+                },
+            },
+            responsive: true,
+            plugins: {
+            legend: { display: false }
+            },
+            scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Cantidad de clientes' }
+            },
+            x: {
+                title: { display: true, text: 'Sexo' }
+            }
+            }
+        }
+        });
+</script>
+{% endblock %}

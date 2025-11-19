@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}Problema 2: Ventas Precarias en Categorías{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  
+    <div class="horizontal-nav">
+        <ul class="nav nav-tabs" id="problemasTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema1' %}">
+                    <i class="bi bi-1-circle me-2"></i>Problema 1: Disparidad en Ventas por Género
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" href="{% url 'problema2' %}">
+                    <i class="bi bi-2-circle me-2"></i>Problema 2: Ventas Precarias en Categorías
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" href="{% url 'problema3' %}">
+                    <i class="bi bi-3-circle me-2"></i>Problema 3: Presencia Geográfica Pobre en EEUU
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-2-circle-fill text-warning me-2"></i>Problema 2: Ventas Precarias en Categorías</h2>
+            <p class="text-muted">Análisis de distribución desigual de ventas entre categorías y tallas</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Descripción del Problema</h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Se ha detectado un <strong>desequilibrio significativo en la distribución de ventas</strong> entre las diferentes categorías de productos y tallas disponibles. La categoría <strong>Ropa</strong> domina el mercado con ventas significativamente mayores, mientras que otras categorías como <strong>Calzado y Outerwear</strong> presentan volúmenes considerablemente menores.</p>
+                    
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Hallazgo crítico:</strong> En este caso, la categoría Outerwear presenta los números más bajos, indicando una oportunidad de mejora o incluso una revisión de la estrategia de ventas para analizar el futuro de esta categoría.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2"></i>Distribución de Ventas por Categoría y Talla</h5>
+                </div>
+                <div class="card-body">
+                    <div id="stackedBarChart" style="height: 450px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Cantidad de Ventas por Categoría</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="ventasChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Monto Total por Categoría</h5>
+                </div>
+                <div class="card-body">
+                    <div id="montoChart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Análisis de Resultados</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">Los datos muestran que la categoría <strong>Ropa</strong> domina tanto en cantidad de ventas como en monto total, representando más del 50% del negocio. Las tallas <strong>M y L</strong> son las más demandadas en todas las categorías. <strong>Outerwear</strong> presenta los números más bajos, indicando una oportunidad de mejora.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb-fill me-2"></i>Causas Identificadas</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2">Marketing enfocado principalmente en Ropa</li>
+                        <li class="mb-2">Mayor variedad de productos en categoría Ropa</li>
+                        <li class="mb-2">Precios más competitivos en Ropa vs otras categorías</li>
+                        <li class="mb-2">Menor visibilidad de Calzado y Accesorios en la plataforma</li>
+                        <li class="mb-2">Estacionalidad afectando demanda de Outerwear</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-check-circle-fill me-2"></i>Estrategias de Diversificación</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="mb-0">
+                        <li class="mb-2">Implementar campañas específicas para Calzado y Accesorios</li>
+                        <li class="mb-2">Ampliar catálogo en categorías con menor volumen</li>
+                        <li class="mb-2">Crear bundles cross-category (Ropa + Calzado + Accesorios)</li>
+                        <li class="mb-2">Promociones estacionales dirigidas para Outerwear</li>
+                        <li class="mb-2">Mejorar presentación visual de categorías secundarias</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up-arrow me-2"></i>Metas de Equilibrio</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Objetivos a 6 meses:</strong></p>
+                    <ul class="mb-0">
+                        <li class="mb-2">Reducir concentración en Ropa a máximo 45%</li>
+                        <li class="mb-2">Incrementar ventas de Calzado en 35%</li>
+                        <li class="mb-2">Aumentar participación de Accesorios en 25%</li>
+                        <li class="mb-2">Duplicar ventas de Outerwear mediante marketing estacional</li>
+                        <li class="mb-2">Optimizar inventario según análisis de tallas por categoría</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ categories|json_script:"categories-data" }}
+{{ sizes|json_script:"sizes-data" }}
+{{ size_data|json_script:"size-data" }}
+{{ x_ventas|json_script:"x-ventas" }}
+{{ y_ventas|json_script:"y-ventas" }}
+{{ cat_names|json_script:"cat-names" }}
+{{ cat_values|json_script:"cat-values" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    const categories = JSON.parse(document.getElementById('categories-data').textContent);
+    const sizes = JSON.parse(document.getElementById('sizes-data').textContent);
+    const sizeData = JSON.parse(document.getElementById('size-data').textContent);
+    const xVentas = JSON.parse(document.getElementById('x-ventas').textContent);
+    const yVentas = JSON.parse(document.getElementById('y-ventas').textContent);
+    const catNames = JSON.parse(document.getElementById('cat-names').textContent);
+    const catValues = JSON.parse(document.getElementById('cat-values').textContent);
+
+
+    const sizeColors = {
+        'S': '#D81B60',
+        'M': '#E6D690',
+        'L': '#6FB3B8',
+        'XL': '#2E7D7B'
+    };
+
+    const traces = [];
+    for (let i = 0; i < sizes.length; i++) {
+        traces.push({
+            name: sizes[i],
+            x: categories,
+            y: sizeData[sizes[i]],
+            type: 'bar',
+            marker: {
+                color: sizeColors[sizes[i]] || '#95A5A6',
+                line: { color: '#000000', width: 1.5 }
+            }
+        });
+    }
+
+    Plotly.newPlot('stackedBarChart', traces, {
+        barmode: 'stack',
+        title: 'Ventas por Categoría y Talla',
+        xaxis: { title: 'Categoría' },
+        yaxis: { title: 'Cantidad' },
+        legend: { title: { text: 'Tallas' }, x: 1.02, y: 1 },
+        margin: { l: 60, r: 120, t: 60, b: 60 }
+    }, {responsive: true});
+
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: xVentas,
+            datasets: [{
+                label: 'Cantidad',
+                data: yVentas,
+                backgroundColor: ["#7EEC7E", "#7fa7c4", "#f48787", "#fdce87"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+
+    const catColors = {
+        'Accesorios': 'rgba(135, 170, 210, 0.9)',
+        'Calzado': 'rgba(230, 140, 140, 0.9)',
+        'Outerwear': 'rgba(240, 190, 130, 0.9)',
+        'Ropa': 'rgba(140, 220, 140, 0.9)'
+    };
+    
+    const pieColors = [];
+    for (let i = 0; i < catNames.length; i++) {
+        pieColors.push(catColors[catNames[i]]);
+    }
+
+    Plotly.newPlot('montoChart', [{
+        values: catValues,
+        labels: catNames,
+        type: 'pie',
+        textinfo: 'label+percent',
+        marker: { colors: pieColors, line: { color: 'white', width: 2 } }
+    }], {
+        title: 'Distribución de Monto Total',
+        showlegend: true,
+        height: 350,
+        margin: { t: 40, b: 20, l: 20, r: 20 }
+    }, {responsive: true});
+</script>
+{% endblock %}
