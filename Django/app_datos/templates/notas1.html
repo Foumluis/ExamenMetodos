@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Promedio notas 1 por Ramo</h2>
+            <div style="height: 400px; position: relative;">
+                <canvas id="miGrafico"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ promedios|json_script:"promedios" }}
+{{ ramos|json_script:"ramos" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const promedios = JSON.parse(document.getElementById('promedios').textContent);
+const ramos = JSON.parse(document.getElementById('ramos').textContent);
+console.log('Promedios cargados:', promedios);
+console.log('Ramos cargados:', ramos);
+
+const ctx = document.getElementById('miGrafico').getContext('2d');
+let delayed;
+
+const miGrafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ramos,
+        datasets: [{
+            label: 'Promedio Nota 1',
+            data: promedios,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        animation: {
+            onComplete: () => {
+                delayed = true;
+            },
+            delay: (context) => {
+                let delay = 0;
+                if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                    delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                }
+                return delay;
+            },
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Promedio' }
+            },
+            x: {
+                title: { display: true, text: 'Ramos' }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Promedio notas 1 TVD por secciones</h2>
+            <div style="height: 400px; position: relative;">
+                <canvas id="miGrafico"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ promedio|json_script:"promedio" }}
+{{ secciones|json_script:"secciones" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const promedios = JSON.parse(document.getElementById('promedio').textContent);
+const secciones = JSON.parse(document.getElementById('secciones').textContent);
+
+
+const ctx = document.getElementById('miGrafico').getContext('2d');
+let delayed;
+
+const miGrafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: secciones,
+        datasets: [{
+            label: 'Promedio Nota 1 TVD',
+            data: promedios,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        animation: {
+            onComplete: () => {
+                delayed = true;
+            },
+            delay: (context) => {
+                let delay = 0;
+                if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                    delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                }
+                return delay;
+            },
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Promedio' }
+            },
+            x: {
+                title: { display: true, text: 'Secciones' }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
