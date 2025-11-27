@@ -18,7 +18,7 @@
                     <h5 class="mb-0">Gráfico Comparativo</h5>
                 </div>
                 <div class="card-body">
-                    <div id="comparisonChart" style="width: 100%; height: 700px;"></div>
+                    <canvas id="comparisonChart" style="width: 100%; height: 700px;"></canvas>
                 </div>
             </div>
         </div>
@@ -33,11 +33,11 @@
                 <div class="card-body">
                     <div class="metrics-container">
                         <div class="metric-item mb-3">
-                            <h6 class="text-primary">Hombres</h6>
+                            <h6 class="text-primary">Minimo: {{ minimo }}</h6>
                         </div>
                         <hr>
                         <div class="metric-item">
-                            <h6 class="text-danger">Mujeres</h6>
+                            <h6 class="text-danger">Maximo: {{ maximo }}</h6>
                         </div>
                     </div>
                 </div>
@@ -50,10 +50,10 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Los promedios y medianas son casi iguales entre hombres y mujeres, lo que indica que ambos géneros gastan montos similares por compra.</li>
-                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>La distribución de valores es muy parecida, aunque los hombres presentan una ligera mayor dispersión, reflejando compras más variables.</li>
-                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Aunque los montos promedio de compra son similares entre géneros, el volumen total de ventas es mayor en hombres, lo que indica que son el principal segmento de clientes de Z&Z.</li>
-                        <li><i class="bi bi-check-circle text-success me-2"></i>Se recomienda que la empresa centre sus esfuerzos de marketing en fidelizar al público masculino y, al mismo tiempo, diseñe estrategias específicas para aumentar la participación femenina en las compras.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Alta incertidumbre en el último trimestre: Las proyecciones se vuelven extremadamente volátiles pasados los 250 días.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Riesgo de un choque inflacionario puntual: Existe una alta probabilidad de un evento que dispare la inflación entre los días 270 y 300.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Sesgo hacia escenarios extremos (Riesgo de cola): Aunque la mayoría de las líneas se mantienen moderadas, hay un riesgo latente de hiperinflación proyectada.</li>
+                        <li><i class="bi bi-check-circle text-success me-2"></i>Estabilidad confiable a corto y mediano plazo: Se puede confiar en las proyecciones para los primeros 200 días.</li>
                     </ul>
                 </div>
             </div>
@@ -69,51 +69,103 @@
 
 {% block extra_js %}
 <script>
-    const malePurchases = JSON.parse(document.getElementById('x').textContent);
-    const femalePurchases = JSON.parse(document.getElementById('y').textContent);
-    
-    
-     let delayed;
+    // 1. Recuperamos los datos enviados desde Python
+    const ejeX = JSON.parse(document.getElementById('x').textContent);
+    const todasLasSimulaciones = JSON.parse(document.getElementById('y').textContent);
     const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const totalDuration = 10000;
+    const delayBetweenPoints = totalDuration / ejeX.length;
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    // 2. AQUÍ ESTÁ EL FOR: Creamos un trazo por cada lista en 'todasLasSimulaciones'
+    const trazos = [];
 
-    const miGrafico = new Chart(ctx, {
-        type: 'plot',
-        data: {
-            labels: x,
-            datasets: [{
-            label: 'Total Clientes',
-            data: y,
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-            }]
-        },
-        options: {
-            animation: {
-                onComplete: () => {
-                    delayed = true;
-                },
-                delay: (context) => {
-                    let delay = 0;
-                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                    delay = context.dataIndex * 10 + context.datasetIndex * 10;
-                    }
-                    return delay;
-                },
-            },
-            responsive: true,
-            plugins: {
-            legend: { display: false }
-            },
-            scales: {
-            y: {
-                beginAtZero: true,
-                title: { display: true, text: 'Cantidad de clientes' }
-            },
-            x: {
-                title: { display: true, text: 'Sexo' }
-            }
-            }
-        }
+    // Helper: color HSL espaciado por índice (colores más distinguibles)
+    function hslForIndex(i, total, saturation = 70, lightness = 50, alpha = 0.9) {
+        const hue = Math.round((i / Math.max(total, 1)) * 360);
+        return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+    }
+
+    // Alternativa: color completamente aleatorio (hex o rgba)
+    function randomRGBA(opacity = 0.9) {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+
+    todasLasSimulaciones.forEach((simulacion, indice) => {
+        // Elige un color: HSL espaciado suele dar mejores resultados para muchas series
+        const color = hslForIndex(indice, todasLasSimulaciones.length, 65, 50, 0.85);
+
+        trazos.push({
+            label: `Simulación ${indice + 1}`,
+            data: simulacion,               // Los datos Y de esta recta específica
+            borderColor: color,
+            backgroundColor: color,
+            borderWidth: 1,
+            pointRadius: 0,                 // Quitamos los puntos para que sea más rápido
+            fill: false
         });
+    });
+    const animation = {
+      x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN, // the point is initially skipped
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.xStarted) {
+            return 0;
+          }
+          ctx.xStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      },
+      y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: previousY,
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+          }
+          ctx.yStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      }
+    };
+
+    // 3. Creamos el gráfico con los trazos generados
+    const miGrafico = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ejeX,    // El eje X es compartido por todas las rectas
+            datasets: trazos // Pasamos el array que llenamos en el FOR
+        },
+      options: {//opciones
+        animation,
+        interaction: {
+          intersect: false
+        },
+        responsive: true,// si al pasar por encima se coloca algun tipo de informacion
+        plugins: {
+          legend: { display: false }// no mostrar la leyenda
+        },
+        scales: {
+          y: {
+
+            title: { display: true, text: 'Monto en dólares' },//titulo del eje y
+
+          },
+          x: {
+            title: { display: true, text: 'Meses' },//titulo del eje x
+
+          }
+        }
+      }
+    });
+
 </script>
 {% endblock %}
+    

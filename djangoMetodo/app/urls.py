@@ -13,14 +13,7 @@ urlpatterns = [
     # Análisis Bivariado
     path('bivariado/comparacion-generos/', views.comparacion_compras_generos, name='comparacion_generos'),
     path('bivariado/categoria-monto/', views.relacion_categoria_monto, name='categoria_monto'),
-    path('bivariado/ventas-categoria/', views.cantidad_ventas_categoria, name='ventas_categoria'),
-    
-    # Análisis de Ubicación
-    path('ubicacion/ubicacion-monto/', views.relacion_ubicacion_monto, name='ubicacion_monto'),
-    path('ubicacion/presencia-geografica/', views.presencia_geografica, name='presencia_geografica'),
-    
-    # Análisis Multivariado
-    path('multivariado/categoria-talla/', views.compras_categoria_talla, name='categoria_talla'),
+
     
     # Problemas
     path('problemas/', views.problemas, name='problemas'),

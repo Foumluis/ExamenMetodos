@@ -171,84 +171,33 @@ def distribucion_clientes_genero(request):
 # Análisis Bivariado
 def comparacion_compras_generos(request):
     # Get purchase amounts by gender
-    df1 = pd.read_excel(os.path.join(EXCEL_DIR, 'ED_TASAJ.xlsx')).set_index('Descripción series').drop('Reg',axis=1)
-    df2 = pd.read_excel(os.path.join(EXCEL_DIR, 'EST_GEN_DEU_01.xlsx')).set_index('Descripción series').drop('Reg',axis=1)
-    df3 = pd.read_excel(os.path.join(EXCEL_DIR, 'ED_VAR_REM_M_2023_EMP.xlsx')).set_index('Descripción series').drop('Reg',axis=1)
-    df4 = pd.read_excel(os.path.join(EXCEL_DIR, 'EXE_EOF_1.xlsx')).set_index('Descripción series').drop('Reg',axis=1)
 
-
-    df = pd.concat([df1,df2,df3,df4],join='inner').drop('\xa0\xa0\xa0Hombres',axis=0).drop('\xa0\xa0\xa0Mujeres',axis=0)
-    indices = df.index.tolist()
-    valores = ["TasaDesempleo", "DeudasTotal","VariacionDeSueldo","GastoDeEmpleo","Inflacion"]
-
-    df.columns = pd.to_datetime(df.columns)
-
-    columnasNuevas ={}
-    for i in range(len(indices)):
-        columnasNuevas[indices[i]]=valores[i]
-    df = df.rename(index=columnasNuevas)
-
-    df1 = df.T
+    df = pd.read_excel(os.path.join(EXCEL_DIR, 'simulacion_inflacion.xlsx')).set_index('rectas')
 
 
 
-
-    experimentos = 1000
-    mes = 12
-    dias = 30
-
-    df2 = pd.DataFrame(df1["Inflacion"])
-    df2["mes"] = df1.index.month
-    df2["cambio_pct"] = df2["Inflacion"].pct_change() * 100  # Calcular cambio porcentual
-
-    # Agrupar los cambios porcentuales por mes
-    meses = df2.groupby("mes").agg({"cambio_pct": list})
-
-    inflacionInicial = df1['Inflacion'].values.tolist()[-1]
-    x = []
-    y = []
-    for i in range(experimentos):
-        inflacion = [inflacionInicial]
-        for k in range(1, mes+1):
-            for l in range(dias):
-                # Usar cambios porcentuales históricos
-                cambio = np.random.choice([x for x in meses.loc[k, "cambio_pct"] if not np.isnan(x) and not np.isinf(x)])
-                nuevoValor = inflacion[-1] * (1 + cambio/100/30)  # Aplicar cambio porcentual diario
-                inflacion.append(float(nuevoValor))
-        x.append(list(range(0, dias*12 +1)))
-        y.append(inflacion)
-    print(x)
     context = {
-        'x': x,
-        'y': y
+        'x': df.columns.tolist(),
+        'y': df.values.tolist(),
+        'minimo': df[df.columns.tolist()[-1]].min(),
+        'maximo': df[df.columns.tolist()[-1]].max()
     }
     return render(request, 'analisis/bivariado/comparacion_generos.html', context)
 
 def relacion_categoria_monto(request):
     # Calculate total purchase amount by category
-    category_totals = tarea.groupby('Category')['Purchase Amount (USD)'].sum().to_dict()
-    
-    # Get category names and values
-    categories = list(category_totals.keys())
-    values = list(category_totals.values())
-    
-    # Calculate percentages
-    total = sum(values)
-    percentages = [(v/total)*100 for v in values]
+
+    df = pd.read_excel(os.path.join(EXCEL_DIR, 'simulacion_inflacion.xlsx')).set_index('rectas')
+
+
+
     context = {
-        'categories': categories,
-        'values': values,
-        'percentages': percentages,
-        'total': total
+        'x': df.columns.tolist(),
+        'y': df.values.tolist(),
+        'minimo': df[df.columns.tolist()[-1]].min(),
+        'maximo': df[df.columns.tolist()[-1]].max()
     }
     return render(request, 'analisis/bivariado/categoria_monto.html', context)
-
-def cantidad_ventas_categoria(request):
-    y=tarea['Category'].value_counts()
-    x =  y.index.tolist()
-    y = y.values.tolist()
-
-    return render(request, 'analisis/bivariado/ventas_categoria.html', {'y': y, 'x': x})
 
 
 
@@ -270,92 +219,12 @@ STATE_CODE_MAP = {
 }
 
 # Análisis de Ubicación
-def relacion_ubicacion_monto(request):
-    # Agrupar por ubicación y calcular el total de ventas
-    ventas_por_estado = tarea.groupby('Location')['Purchase Amount (USD)'].sum().reset_index()
-    ventas_por_estado.columns = ['Estado', 'Total_Ventas']
-    
-    # Mapear nombres de estados a códigos
-    ventas_por_estado['Codigo'] = ventas_por_estado['Estado'].map(STATE_CODE_MAP)
-    
-    # Ordenar por total de ventas descendente
-    ventas_por_estado = ventas_por_estado.sort_values('Total_Ventas', ascending=False)
-    
-    # Preparar datos para el template
-    estados = ventas_por_estado['Estado'].tolist()
-    codigos = ventas_por_estado['Codigo'].tolist()
-    totales = [int(x) for x in ventas_por_estado['Total_Ventas'].tolist()]
-    
-    # Top 10 estados
-    top_10_estados = estados[:10]
-    top_10_totales = totales[:10]
-    
-    context = {
-        'estados': estados,
-        'codigos': codigos,
-        'totales': totales,
-        'top_10_estados': top_10_estados,
-        'top_10_totales': top_10_totales
-    }
-    
-    return render(request, 'analisis/ubicacion/ubicacion_monto.html', context)
 
-def presencia_geografica(request):
-    # Calcular cantidad de ventas por estado
-    ventas_por_estado = tarea.groupby('Location').size().reset_index(name='Cantidad_Ventas')
-    ventas_por_estado.columns = ['Estado', 'Cantidad_Ventas']
-    
-    # Mapear nombres de estados a códigos
-    ventas_por_estado['Codigo'] = ventas_por_estado['Estado'].map(STATE_CODE_MAP)
-    
-    # Crear copia ordenada para la tabla (bottom 10)
-    ventas_ordenadas = ventas_por_estado.sort_values('Cantidad_Ventas', ascending=True)
-    estados_baja_presencia = ventas_ordenadas.head(10)
-    
-    # Bottom 10 para la tabla - crear lista de diccionarios
-    bottom_10_data = [
-        {'estado': estado, 'cantidad': int(cantidad)}
-        for estado, cantidad in zip(
-            estados_baja_presencia['Estado'].tolist(),
-            estados_baja_presencia['Cantidad_Ventas'].tolist()
-        )
-    ]
-    
-    # Preparar datos para el mapa (todos los estados)
-    todos_estados = ventas_por_estado['Estado'].tolist()
-    todos_codigos = ventas_por_estado['Codigo'].tolist()
-    todas_cantidades = [int(x) for x in ventas_por_estado['Cantidad_Ventas'].tolist()]
-    
-    context = {
-        'todos_estados': todos_estados,
-        'todos_codigos': todos_codigos,
-        'todas_cantidades': todas_cantidades,
-        'bottom_10_data': bottom_10_data
-    }
-    
-    return render(request, 'analisis/ubicacion/presencia_geografica.html', context)
+
 
 
 
 # Análisis Multivariado
-def compras_categoria_talla(request):
-
-    category_size_counts = pd.crosstab(tarea['Category'], tarea['Size'])
-    
-
-    categories = category_size_counts.index.tolist()
-    sizes = category_size_counts.columns.tolist()
-
-    size_data = {}
-    for size in sizes:
-        size_data[size] = category_size_counts[size].tolist()
-    
-    context = {
-        'categories': categories,
-        'sizes': sizes,
-        'size_data': size_data
-    }
-    return render(request, 'analisis/multivariado/categoria_talla.html', context)
 
 # Problemas
 def problemas(request):
